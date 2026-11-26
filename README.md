@@ -15,3 +15,5 @@ python -m unittest discover -s tests -v
 单独调用：`python -m telemetrycourt cover --db state.sqlite --fixture fixtures/cover_normal.json`，`agent` 和 `blind` 类推。六份正常/失败样例按 cover-normal、agent-normal、blind-normal、cover-failure、agent-failure、blind-failure 的顺序共享数据库执行；`demo` 即为该顺序。`report` 输出不可变事件；`replay` 在空数据库重放并逐业务表核对。主要结论包括覆盖可信、盲区升级、维护抑制、采样隔离、恢复不充分和关单。
 
 `python -m telemetrycourt spool --db state.sqlite --fixture fixtures/spool_normal.json` 为当前可信样本预留离线导出字节。先用 cover/agent 正常 fixture 填充同一个库。
+
+`python -m telemetrycourt notifications --db demo.sqlite --fixture fixtures/notifications_normal.json` 按已有盲区标签和通道额度模拟通知。

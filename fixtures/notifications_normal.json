@@ -1,0 +1,1 @@
+{"routes":{"primary":1},"alerts":[{"case":"case-1","alert":"alert-1","route":"primary"},{"case":"case-2","alert":"alert-2","route":"primary"}]}

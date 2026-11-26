@@ -1,12 +1,13 @@
 import argparse
 import json
 from pathlib import Path
+from . import notifications
 from . import spool
 from .store import connect,run,replay,allrows
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool'])
+    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications'])
     parser.add_argument('--db',default='demo.sqlite')
     parser.add_argument('--fixture')
     args=parser.parse_args()
@@ -14,7 +15,10 @@ def main():
         result=replay(args.db)
     else:
         db=connect(args.db)
-        if args.command=='spool':
+        if args.command=='notifications':
+            if not args.fixture:parser.error('--fixture required')
+            result=notifications.run(db,json.loads(Path(args.fixture).read_text(encoding='utf-8')))
+        elif args.command=='spool':
             if not args.fixture:parser.error('--fixture required')
             result=spool.run(db,json.loads(Path(args.fixture).read_text(encoding='utf-8')))
         elif args.command=='report':result=allrows(db,'SELECT * FROM events ORDER BY seq')
@@ -29,3 +33,4 @@ def main():
     if args.command=='replay' and not result['verified']:raise SystemExit(2)
 
 if __name__=='__main__':main()
+
