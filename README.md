@@ -17,3 +17,5 @@ python -m unittest discover -s tests -v
 `python -m telemetrycourt spool --db state.sqlite --fixture fixtures/spool_normal.json` 为当前可信样本预留离线导出字节。先用 cover/agent 正常 fixture 填充同一个库。
 
 `python -m telemetrycourt notifications --db demo.sqlite --fixture fixtures/notifications_normal.json` 按已有盲区标签和通道额度模拟通知。
+
+`python -m telemetrycourt archive --db demo.sqlite --fixture fixtures/archive_normal.json` 汇总当前可信观测的半开时间桶。
