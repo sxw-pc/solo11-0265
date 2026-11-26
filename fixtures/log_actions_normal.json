@@ -1,0 +1,11 @@
+{
+  "rules":[
+    {"where":{"family":"missing","phase":"first"},"action":"sample-again"},
+    {"where":{"family":"missing","phase":"retry"},"action":"sample-again"},
+    {"where":{"family":"restart","phase":"retry"},"action":"check-restart"}
+  ],
+  "rows":[
+    {"schema":"rich","session":"local-a","sequence":1,"family":"missing","phase":"first"},
+    {"schema":"rich","session":"local-a","sequence":2,"family":"restart","phase":"retry"}
+  ]
+}
