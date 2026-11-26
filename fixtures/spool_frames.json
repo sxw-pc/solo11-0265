@@ -1,0 +1,5 @@
+{
+  "bytes": 6,
+  "acknowledged": [["sample-10", 1, 3]],
+  "packets": [{"sample": "sample-20", "bytes": 6, "frame": {"sample":"sample-20","encoding":"delta","generation":1,"base":["sample-10",1,3],"value":8}}]
+}
