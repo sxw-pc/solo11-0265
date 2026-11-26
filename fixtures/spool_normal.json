@@ -1,0 +1,8 @@
+{
+  "bytes": 12,
+  "packets": [
+    {"sample": "sample-10", "bytes": 6},
+    {"sample": "sample-20", "bytes": 7},
+    {"sample": "sample-30", "bytes": 6}
+  ]
+}

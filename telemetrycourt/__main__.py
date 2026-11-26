@@ -1,11 +1,12 @@
 import argparse
 import json
 from pathlib import Path
+from . import spool
 from .store import connect,run,replay,allrows
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay'])
+    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool'])
     parser.add_argument('--db',default='demo.sqlite')
     parser.add_argument('--fixture')
     args=parser.parse_args()
@@ -13,7 +14,10 @@ def main():
         result=replay(args.db)
     else:
         db=connect(args.db)
-        if args.command=='report':result=allrows(db,'SELECT * FROM events ORDER BY seq')
+        if args.command=='spool':
+            if not args.fixture:parser.error('--fixture required')
+            result=spool.run(db,json.loads(Path(args.fixture).read_text(encoding='utf-8')))
+        elif args.command=='report':result=allrows(db,'SELECT * FROM events ORDER BY seq')
         else:
             if args.command=='demo':
                 files=[(sub,f'fixtures/{sub}_{kind}.json') for sub,kind in [('cover','normal'),('agent','normal'),('blind','normal'),('cover','failure'),('agent','failure'),('blind','failure')]]
