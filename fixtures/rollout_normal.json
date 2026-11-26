@@ -1,0 +1,8 @@
+{
+  "route": "route-diagnostics", "candidate": "updated", "planned": 3,
+  "false_release_limit": "7/50", "pairs": [
+    {"position": 1, "base_ms": 2, "candidate_ms": 1},
+    {"position": 2, "base_ms": 2, "candidate_ms": 1},
+    {"position": 3, "base_ms": 2, "candidate_ms": 1}
+  ]
+}
