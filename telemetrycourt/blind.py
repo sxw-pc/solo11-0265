@@ -7,14 +7,17 @@ CREATE TABLE IF NOT EXISTS witnesses(id TEXT PRIMARY KEY,case_id TEXT,actor TEXT
 CREATE TABLE IF NOT EXISTS alert_labels(id TEXT PRIMARY KEY,case_id TEXT,alert TEXT,label TEXT,at INTEGER);
 '''
 
-def coverage(db,req,start,end):
+def coverage_evidence(db,req,start,end):
     top=one(db,'SELECT * FROM topologies WHERE object=?',(req['object'],))
-    if not top:return False
-    samples=allrows(db,"SELECT s.* FROM samples s JOIN leases l ON l.id=s.lease WHERE s.object=? AND s.signal=? AND s.status='trusted' AND l.status='active' AND l.object_uid=? AND l.agent_uid=s.agent_uid AND s.corrected_at BETWEEN ? AND ? ORDER BY s.corrected_at",(req['object'],req['signal'],top['uid'],start,end))
+    if not top or end<=start:return False,[]
+    samples=allrows(db,"SELECT s.* FROM samples s JOIN leases l ON l.id=s.lease WHERE s.object=? AND s.signal=? AND s.status='trusted' AND l.status='active' AND l.object_uid=? AND l.agent_uid=s.agent_uid AND l.source=s.source AND l.start<=s.corrected_at AND s.corrected_at<l.expires AND s.corrected_at BETWEEN ? AND ? ORDER BY s.corrected_at",(req['object'],req['signal'],top['uid'],start,end))
     sources={s['source'] for s in samples}
-    if len(sources)<req['min_sources']:return False
+    if len(sources)<req['min_sources']:return False,samples
     times=sorted({start,*[s['corrected_at'] for s in samples],end})
-    return all(b-a<=req['max_gap'] for a,b in zip(times,times[1:]))
+    return all(b-a<=req['max_gap'] for a,b in zip(times,times[1:])),samples
+
+def coverage(db,req,start,end):
+    return coverage_evidence(db,req,start,end)[0]
 
 def handle(db,x):
     op=x['op']
@@ -49,7 +52,7 @@ def handle(db,x):
         return {'decision':label}
     if op=='witness':
         case=one(db,'SELECT * FROM blind_cases WHERE id=?',(x['case'],))
-        if not case or x['kind'] not in ('independent','owner'):
+        if not case or case['status'] not in ('open','review','suppressed') or x['kind'] not in ('independent','owner') or x['at']<case['end']:
             return {'decision':'witness_denied'}
         db.execute('INSERT INTO witnesses VALUES(?,?,?,?,?)',(x['id'],x['case'],x['actor'],x['at'],x['kind']))
         return {'decision':'witness_recorded'}
@@ -59,8 +62,11 @@ def handle(db,x):
             return {'decision':'not_open'}
         top=one(db,'SELECT * FROM topologies WHERE object=?',(case['object'],))
         req=case
-        witness=one(db,"SELECT * FROM witnesses WHERE case_id=? AND kind='independent' ORDER BY at DESC LIMIT 1",(x['case'],))
-        if not top or top['uid']!=case['object_uid'] or not req or not witness or x['end']<=x['start'] or not coverage(db,req,x['start'],x['end']):
+        covered,samples=coverage_evidence(db,req,x['start'],x['end'])
+        collectors={identity for s in samples for identity in (s['agent_uid'],s['source'])}
+        witnesses=allrows(db,"SELECT * FROM witnesses WHERE case_id=? AND kind='independent' AND at>=?",(x['case'],x['end']))
+        independent=any(w['actor'] not in collectors for w in witnesses)
+        if not top or top['uid']!=case['object_uid'] or x['start']<case['start'] or x['end']<case['end'] or not covered or not independent:
             return {'decision':'recovery_unproven'}
         db.execute("UPDATE blind_cases SET status='closed' WHERE id=?",(x['case'],))
         db.execute("UPDATE escalations SET status='closed' WHERE case_id=? AND status='active'",(x['case'],))

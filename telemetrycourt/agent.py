@@ -51,6 +51,9 @@ def handle(db,x):
     if op=='interval':
         req=one(db,"SELECT * FROM requirements WHERE object=? AND signal=? AND status='active' ORDER BY generation DESC LIMIT 1",(x['object'],x['signal']))
         if not req:return {'decision':'no_requirement'}
-        samples=allrows(db,"SELECT DISTINCT source FROM samples WHERE object=? AND signal=? AND status='trusted' AND corrected_at BETWEEN ? AND ?",(x['object'],x['signal'],x['start'],x['end']))
-        return {'decision':'covered' if len(samples)>=req['min_sources'] else 'undercovered','sources':len(samples)}
+        if x['end']<=x['start'] or x['start']<req['effective']:
+            return {'decision':'invalid_window'}
+        from .blind import coverage_evidence
+        covered,samples=coverage_evidence(db,req,x['start'],x['end'])
+        return {'decision':'covered' if covered else 'undercovered','sources':len({s['source'] for s in samples})}
     return {'decision':'unknown_operation'}

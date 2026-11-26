@@ -53,6 +53,31 @@ class TelemetryTests(unittest.TestCase):
         req={'event_id':'req-2','op':'requirement','id':'req-a','object':'svc-a','signal':'latency','generation':2,'min_sources':2,'max_gap':10,'severity':'critical','effective':0}
         self.assertEqual(run(self.db,'cover',req)['decision'],'requirement_active')
         self.assertEqual(run(self.db,'blind',{'event_id':'two-source-case','op':'assess','id':'two-source-case','requirement':'req-a','start':10,'end':30})['decision'],'blind_escalate')
+    def test_interval_uses_the_same_gap_and_lease_evidence_as_blind_assessment(self):
+        self.start()
+        interval={'event_id':'gap-interval','op':'interval','object':'svc-a','signal':'latency','start':10,'end':50}
+        self.assertEqual(run(self.db,'agent',interval)['decision'],'undercovered')
+        self.assertEqual(run(self.db,'blind',{'event_id':'gap-case','op':'assess','id':'gap-case','requirement':'req-a','start':10,'end':50})['decision'],'blind_escalate')
+        self.assertEqual(run(self.db,'agent',dict(interval,event_id='covered-interval',end=30))['decision'],'covered')
+        self.assertEqual(run(self.db,'blind',{'event_id':'covered-case','op':'assess','id':'covered-case','requirement':'req-a','start':10,'end':30})['decision'],'coverage_trusted')
+        run(self.db,'cover',{'event_id':'new-top-for-interval','op':'topology','object':'svc-a','uid':'uid-2','service':'checkout','generation':2,'at':31})
+        self.assertEqual(run(self.db,'agent',dict(interval,event_id='stale-uid-interval',end=30))['decision'],'undercovered')
+    def test_blind_close_needs_timely_witness_independent_of_collectors(self):
+        self.start()
+        case={'event_id':'case-w','op':'assess','id':'case-w','requirement':'req-a','start':40,'end':50}
+        self.assertEqual(run(self.db,'blind',case)['decision'],'blind_escalate')
+        witness={'event_id':'stale-w','op':'witness','id':'stale-w','case':'case-w','actor':'carol','at':1,'kind':'independent'}
+        self.assertEqual(run(self.db,'blind',witness)['decision'],'witness_denied')
+        for command in json.loads((ROOT/'fixtures'/'agent_failure.json').read_text(encoding='utf-8'))[:3]:
+            run(self.db,'agent',command)
+        close={'event_id':'early-close-w','op':'close','case':'case-w','start':40,'end':50}
+        self.assertEqual(run(self.db,'blind',close)['decision'],'recovery_unproven')
+        self.assertEqual(run(self.db,'blind',dict(witness,event_id='collector-w',id='collector-w',actor='agent-1',at=54))['decision'],'witness_recorded')
+        self.assertEqual(run(self.db,'blind',dict(close,event_id='collector-close-w'))['decision'],'recovery_unproven')
+        self.assertEqual(run(self.db,'blind',dict(witness,event_id='source-w',id='source-w',actor='node-agent',at=54))['decision'],'witness_recorded')
+        self.assertEqual(run(self.db,'blind',dict(close,event_id='source-close-w'))['decision'],'recovery_unproven')
+        self.assertEqual(run(self.db,'blind',dict(witness,event_id='good-w',id='good-w',at=54))['decision'],'witness_recorded')
+        self.assertEqual(run(self.db,'blind',dict(close,event_id='good-close-w'))['decision'],'blind_closed')
     def test_case_keeps_original_requirement_when_policy_changes(self):
         self.start();self.fixture('blind','normal')
         req={'event_id':'relax','op':'requirement','id':'req-a','object':'svc-a','signal':'latency','generation':2,'min_sources':1,'max_gap':100,'severity':'critical','effective':0}
