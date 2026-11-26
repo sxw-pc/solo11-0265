@@ -1,0 +1,7 @@
+[
+ {"event_id":"lease-1","op":"lease","id":"lease-a","object":"svc-a","object_uid":"uid-1","agent_uid":"agent-1","source":"node-agent","node_generation":1,"lease_generation":1,"start":0,"expires":100},
+ {"event_id":"sample-10","op":"sample","id":"sample-10","lease":"lease-a","object":"svc-a","signal":"latency","source":"node-agent","agent_uid":"agent-1","at":10,"sequence":1},
+ {"event_id":"sample-20","op":"sample","id":"sample-20","lease":"lease-a","object":"svc-a","signal":"latency","source":"node-agent","agent_uid":"agent-1","at":20,"sequence":2},
+ {"event_id":"sample-30","op":"sample","id":"sample-30","lease":"lease-a","object":"svc-a","signal":"latency","source":"node-agent","agent_uid":"agent-1","at":30,"sequence":3},
+ {"event_id":"interval-1","op":"interval","object":"svc-a","signal":"latency","start":10,"end":30}
+]

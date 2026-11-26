@@ -1,0 +1,9 @@
+[
+ {"event_id":"covered","op":"assess","id":"case-covered","requirement":"req-a","start":10,"end":30},
+ {"event_id":"case-1","op":"assess","id":"case-1","requirement":"req-a","start":40,"end":50},
+ {"event_id":"case-2","op":"assess","id":"case-2","requirement":"req-a","start":60,"end":70},
+ {"event_id":"escalate-1","op":"escalate","id":"escalate-1","case":"case-1","owner":"alice","at":51},
+ {"event_id":"handoff-1","op":"handoff","id":"handoff-1","from":"escalate-1","owner":"bob","at":52},
+ {"event_id":"label-1","op":"label","id":"label-1","case":"case-1","alert":"alert-1","at":53},
+ {"event_id":"witness-1","op":"witness","id":"witness-1","case":"case-1","actor":"carol","kind":"independent","at":54}
+]

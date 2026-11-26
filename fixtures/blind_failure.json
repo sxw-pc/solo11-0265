@@ -1,0 +1,6 @@
+[
+ {"event_id":"close-1","op":"close","case":"case-1","start":40,"end":50},
+ {"event_id":"label-2","op":"label","id":"label-2","case":"case-1","alert":"alert-2","at":55},
+ {"event_id":"expired-exemption","op":"assess","id":"case-expired","requirement":"req-a","start":81,"end":91},
+ {"event_id":"late-close","op":"close","case":"case-expired","start":80,"end":90}
+]

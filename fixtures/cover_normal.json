@@ -1,0 +1,7 @@
+[
+ {"event_id":"top-1","op":"topology","object":"svc-a","uid":"uid-1","service":"checkout","generation":1,"at":0},
+ {"event_id":"req-1","op":"requirement","id":"req-a","object":"svc-a","signal":"latency","generation":1,"min_sources":1,"max_gap":10,"severity":"critical","effective":0},
+ {"event_id":"ex-1","op":"exemption","id":"maintenance-a","object":"svc-a","signal":"latency","start":60,"expires":80,"reason":"maintenance"},
+ {"event_id":"vote-1","op":"approve","id":"vote-1","exemption":"maintenance-a","actor":"alice","role":"oncall","expires":80},
+ {"event_id":"vote-2","op":"approve","id":"vote-2","exemption":"maintenance-a","actor":"bob","role":"owner","expires":80}
+]

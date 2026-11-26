@@ -1,0 +1,5 @@
+[
+ {"event_id":"stale-top","op":"topology","object":"svc-a","uid":"old-uid","service":"checkout","generation":1,"at":31},
+ {"event_id":"stale-req","op":"requirement","id":"req-a","object":"svc-a","signal":"latency","generation":1,"min_sources":1,"max_gap":50,"severity":"critical","effective":0},
+ {"event_id":"late-vote","op":"approve","id":"late-vote","exemption":"maintenance-a","actor":"bob","role":"owner","expires":30}
+]
