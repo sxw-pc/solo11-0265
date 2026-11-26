@@ -1,0 +1,9 @@
+[
+  {"op":"configure","device":"demo-device","revision":"v1","threshold":2},
+  {"op":"receive","device":"demo-device","sample":{"tick":0,"high":true,"detail":"a"}},
+  {"op":"receive","device":"demo-device","sample":{"tick":3,"high":true,"detail":"b"}},
+  {"op":"checkpoint","device":"demo-device"},
+  {"op":"enable","device":"demo-device","space":10},
+  {"op":"receive","device":"demo-device","sample":{"tick":4,"high":true,"detail":"c"}},
+  {"op":"open","device":"demo-device","handle":"0/v1"}
+]

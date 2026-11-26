@@ -1,7 +1,7 @@
 import argparse
 import json
 from pathlib import Path
-from . import burst, histogram
+from . import burst, device, histogram
 from . import egress
 from . import archive
 from . import notifications
@@ -10,7 +10,7 @@ from .store import connect,run,replay,allrows
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram','burst'])
+    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram','burst','device'])
     parser.add_argument('--db',default='demo.sqlite')
     parser.add_argument('--fixture')
     args=parser.parse_args()
@@ -18,7 +18,11 @@ def main():
         result=replay(args.db)
     else:
         db=connect(args.db)
-        if args.command=='burst':
+        if args.command=='device':
+            if not args.fixture:
+                parser.error('--fixture required')
+            result=[device.run(db, item) for item in json.loads(Path(args.fixture).read_text(encoding='utf-8'))]
+        elif args.command=='burst':
             if not args.fixture:
                 parser.error('--fixture required')
             result=burst.run(json.loads(Path(args.fixture).read_text(encoding='utf-8')))
