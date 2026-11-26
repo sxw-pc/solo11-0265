@@ -1,0 +1,23 @@
+{
+  "images": [
+    {"begin":0,"end":12,"base":100,"size":8,"build":"app-A"},
+    {"begin":12,"end":30,"base":100,"size":8,"build":"app-B"},
+    {"begin":12,"end":30,"base":200,"size":8,"build":"plug-K"}
+  ],
+  "symbols": {
+    "app-A": {"0":[{"origin":"A-reader","document":"archive-A","line":1}]},
+    "app-B": {"0":[{"origin":"B-reader","document":"archive-B","line":2}]},
+    "plug-K": {"0":[{"origin":"K-loop","document":"archive-K","line":1}]}
+  },
+  "documents": {
+    "archive-A":["read_cached(old_slot)"],
+    "archive-B":["check_slot()","read_cached(new_slot)"],
+    "archive-K":["poll_clock()"],
+    "fix":["require_active_slot()","read_repairable_slot()"]
+  },
+  "replacements": {
+    "A-reader":{"document":"fix","line":2},
+    "B-reader":{"document":"fix","line":2}
+  },
+  "samples": [{"at":10,"pc":100},{"at":12,"pc":100},{"at":12,"pc":200}]
+}
