@@ -1,0 +1,5 @@
+{
+  "statement":"routing-week-a", "deadline":5, "allowed_late":1,
+  "front":[{"request":"p","duration":0},{"request":"q","duration":4},{"request":"r","duration":4}],
+  "back":[{"request":"p","duration":4},{"request":"q","duration":0},{"request":"r","duration":4}]
+}
