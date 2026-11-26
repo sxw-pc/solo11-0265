@@ -1,0 +1,9 @@
+{
+  "target":"reply", "deadline":5,
+  "tasks":[
+    {"id":"top","worker":"X","arrival":0,"depends":[],"work":4},
+    {"id":"left","worker":"X","arrival":0,"depends":[],"work":3},
+    {"id":"right","worker":"Y","arrival":0,"depends":[],"work":5},
+    {"id":"reply","worker":"Z","arrival":0,"depends":["left","right"],"work":0}
+  ]
+}
