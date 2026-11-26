@@ -1,6 +1,7 @@
 import argparse
 import json
 from pathlib import Path
+from . import autoscale, loadlab
 from . import histogram
 from . import egress
 from . import archive
@@ -10,12 +11,17 @@ from .store import connect,run,replay,allrows
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram'])
+    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram','loadlab','autoscale'])
     parser.add_argument('--db',default='demo.sqlite')
     parser.add_argument('--fixture')
     args=parser.parse_args()
     if args.command=='replay':
         result=replay(args.db)
+    elif args.command in ('loadlab', 'autoscale'):
+        if not args.fixture:
+            parser.error('--fixture required')
+        module = loadlab if args.command == 'loadlab' else autoscale
+        result = module.run(json.loads(Path(args.fixture).read_text(encoding='utf-8')))
     else:
         db=connect(args.db)
         if args.command=='histogram':

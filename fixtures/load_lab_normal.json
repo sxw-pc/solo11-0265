@@ -1,0 +1,8 @@
+{
+  "service_per_replica": 1,
+  "replicas": 1,
+  "min_replicas": 1,
+  "max_replicas": 3,
+  "backlog_target": 0,
+  "arrivals": [0, 4, 0, 0]
+}

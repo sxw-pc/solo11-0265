@@ -23,3 +23,7 @@ python -m unittest discover -s tests -v
 `python -m telemetrycourt egress --db demo.sqlite --fixture fixtures/egress_normal.json` 为同租户滚动字节额度内选择导出包并记录预留。
 
 `python -m telemetrycourt histogram --db demo.sqlite --fixture fixtures/histogram_normal.json` 使用归档的样本身份和合成测量值生成按时间桶的直方图。
+
+### 合成负载演练
+
+`python -m telemetrycourt loadlab --fixture fixtures/load_lab_normal.json` 以固定副本数运行 FIFO。`python -m telemetrycourt autoscale --fixture fixtures/load_lab_normal.json` 让上一时刻的积压量驱动下一时刻的副本数。两条命令输出每批实际完成和等待时间，全部输入来自本地夹具。
