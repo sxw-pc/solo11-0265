@@ -1,0 +1,29 @@
+[
+  {
+    "id": "a",
+    "op": "credit",
+    "meter": "requests",
+    "amount": 7
+  },
+  {
+    "id": "p1",
+    "op": "pull",
+    "meter": "requests"
+  },
+  {
+    "id": "b",
+    "op": "credit",
+    "meter": "requests",
+    "amount": 3
+  },
+  {
+    "id": "p1",
+    "op": "pull",
+    "meter": "requests"
+  },
+  {
+    "id": "p2",
+    "op": "pull",
+    "meter": "requests"
+  }
+]

@@ -1,7 +1,7 @@
 import argparse
 import json
 from pathlib import Path
-from . import autoscale, loadlab
+from . import autoscale, loadlab, pull
 from . import histogram
 from . import egress
 from . import archive
@@ -11,7 +11,7 @@ from .store import connect,run,replay,allrows
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram','loadlab','autoscale'])
+    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram','loadlab','autoscale','meter-pull'])
     parser.add_argument('--db',default='demo.sqlite')
     parser.add_argument('--fixture')
     args=parser.parse_args()
@@ -24,7 +24,11 @@ def main():
         result = module.run(json.loads(Path(args.fixture).read_text(encoding='utf-8')))
     else:
         db=connect(args.db)
-        if args.command=='histogram':
+        if args.command=='meter-pull':
+            if not args.fixture:
+                parser.error('--fixture required')
+            result=pull.run(db,json.loads(Path(args.fixture).read_text(encoding='utf-8')))
+        elif args.command=='histogram':
             if not args.fixture:
                 parser.error('--fixture required')
             result=histogram.run(db,json.loads(Path(args.fixture).read_text(encoding='utf-8')))

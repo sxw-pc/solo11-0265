@@ -27,3 +27,7 @@ python -m unittest discover -s tests -v
 ### 合成负载演练
 
 `python -m telemetrycourt loadlab --fixture fixtures/load_lab_normal.json` 以固定副本数运行 FIFO。`python -m telemetrycourt autoscale --fixture fixtures/load_lab_normal.json` 让上一时刻的积压量驱动下一时刻的副本数。两条命令输出每批实际完成和等待时间，全部输入来自本地夹具。
+
+### 合成计量拉取
+
+`python -m telemetrycourt meter-pull --db meter.sqlite --fixture fixtures/meter_pull_normal.json` 用独立 SQLite 夹具查看读后清零与重复拉取回执。每次拉取返回它在提交时取走的增量。
