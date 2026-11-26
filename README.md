@@ -21,3 +21,5 @@ python -m unittest discover -s tests -v
 `python -m telemetrycourt archive --db demo.sqlite --fixture fixtures/archive_normal.json` 汇总当前可信观测的半开时间桶。
 
 `python -m telemetrycourt egress --db demo.sqlite --fixture fixtures/egress_normal.json` 为同租户滚动字节额度内选择导出包并记录预留。
+
+`python -m telemetrycourt histogram --db demo.sqlite --fixture fixtures/histogram_normal.json` 使用归档的样本身份和合成测量值生成按时间桶的直方图。

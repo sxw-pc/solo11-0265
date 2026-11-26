@@ -1,0 +1,1 @@
+{"query":{"object":"svc-a","signal":"latency","start":10,"end":30,"bucket_width":10},"edges":[20,40],"values":{"sample-10":20,"sample-20":60}}
