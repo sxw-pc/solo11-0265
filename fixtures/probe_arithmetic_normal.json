@@ -1,0 +1,5 @@
+{
+  "inputs":{"a":7,"b":4,"c":4},"limit":6,
+  "program":[{"op":"input","name":"a"},{"op":"input","name":"b"},{"op":"add"},
+             {"op":"input","name":"c"},{"op":"subtract"}]
+}
