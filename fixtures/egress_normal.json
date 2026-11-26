@@ -1,0 +1,24 @@
+{
+  "delivery": "id-1",
+  "tenant": "tenant-a",
+  "at": 30,
+  "quota": 12,
+  "window": 20,
+  "pack": {
+    "bytes": 12,
+    "packets": [
+      {
+        "sample": "sample-10",
+        "bytes": 6
+      },
+      {
+        "sample": "sample-20",
+        "bytes": 7
+      },
+      {
+        "sample": "sample-30",
+        "bytes": 6
+      }
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 import argparse
 import json
 from pathlib import Path
+from . import egress
 from . import archive
 from . import notifications
 from . import spool
@@ -8,7 +9,7 @@ from .store import connect,run,replay,allrows
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive'])
+    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress'])
     parser.add_argument('--db',default='demo.sqlite')
     parser.add_argument('--fixture')
     args=parser.parse_args()
@@ -16,7 +17,11 @@ def main():
         result=replay(args.db)
     else:
         db=connect(args.db)
-        if args.command=='archive':
+        if args.command=='egress':
+            if not args.fixture:
+                parser.error('--fixture required')
+            result=egress.run(db,json.loads(Path(args.fixture).read_text(encoding='utf-8')))
+        elif args.command=='archive':
             if not args.fixture:
                 parser.error('--fixture required')
             result=archive.run(db,json.loads(Path(args.fixture).read_text(encoding='utf-8')))
