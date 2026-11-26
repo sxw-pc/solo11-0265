@@ -1,0 +1,12 @@
+{
+  "credit": 2,
+  "threshold": 2,
+  "samples": [
+    {"tick": 0, "high": true, "detail": "sil-o"},
+    {"tick": 1, "high": true, "detail": "sil-p"},
+    {"tick": 2, "high": true, "detail": "sil-q"},
+    {"tick": 3, "high": false, "detail": "sil-r"},
+    {"tick": 4, "high": true, "detail": "sil-s"},
+    {"tick": 5, "high": true, "detail": "sil-t"}
+  ]
+}
