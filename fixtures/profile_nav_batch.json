@@ -1,0 +1,37 @@
+{
+  "images": [
+    {"begin": 0, "end": 12, "base": 100, "size": 8, "build": "app-A"},
+    {"begin": 12, "end": 30, "base": 100, "size": 8, "build": "app-B"},
+    {"begin": 12, "end": 30, "base": 200, "size": 8, "build": "plug-K"}
+  ],
+  "symbols": {
+    "app-A": {"0": [{"origin": "A-reader", "document": "archive-A", "line": 1}]},
+    "app-B": {"0": [{"origin": "B-reader", "document": "archive-B", "line": 2}]},
+    "plug-K": {"0": [{"origin": "K-loop", "document": "archive-K", "line": 1}]}
+  },
+  "documents": {
+    "archive-A": ["read_cached(old_slot)"],
+    "archive-B": ["check_slot()", "read_cached(new_slot)"],
+    "archive-K": ["poll_clock()"],
+    "migrate-1": ["delegated_slot_read()"],
+    "fix": ["require_active_slot()", "read_repairable_slot()"]
+  },
+  "lineages": {
+    "A-reader": [
+      {"version": "migrate-1", "document": "migrate-1", "line": 1},
+      {"version": "fix", "document": "fix", "line": 2}
+    ],
+    "B-reader": [
+      {"version": "migrate-1", "document": "migrate-1", "line": 1},
+      {"version": "fix", "document": "fix", "line": 2}
+    ],
+    "K-loop": [
+      {"version": "migrate-1", "document": "migrate-1", "line": 1},
+      {"version": "fix", "document": "fix", "line": 2}
+    ]
+  },
+  "clock_offsets": [0, 2],
+  "batches": [
+    {"id": "batch-1", "at": 10, "frames": [100, 200]}
+  ]
+}
