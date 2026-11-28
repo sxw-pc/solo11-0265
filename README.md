@@ -23,3 +23,14 @@ python -m unittest discover -s tests -v
 `python -m telemetrycourt egress --db demo.sqlite --fixture fixtures/egress_normal.json` 为同租户滚动字节额度内选择导出包并记录预留。
 
 `python -m telemetrycourt histogram --db demo.sqlite --fixture fixtures/histogram_normal.json` 使用归档的样本身份和合成测量值生成按时间桶的直方图。
+
+`python -m telemetrycourt probe-review --fixture fixtures/probe_arithmetic_normal.json` 回放定宽寄存器（[-7,7]，每次 add/subtract 先算真值再限幅）并据 limit 给出 open_review/normal。
+
+`probe-formula` 为数值合同签发可在采集端直接运行的固定程序，全部验收结论都由 instrument_vm 的真实执行产生，不返回期望结果表：
+
+```sh
+python -m telemetrycourt probe-formula --fixture fixtures/probe_contract_legacy.json
+python -m telemetrycourt probe-formula --fixture fixtures/probe_contract_raw.json --certificate 证书.json --reading fixtures/probe_reading_in_relation.json
+```
+
+合同分两类：`legacy_clip` 的命名限幅点（如历史读数 a+b）必须原样可核，限幅只能发生在该步骤，跨点重排无法表示该点即拒签；`raw_exact` 要求在由小整数界、关系（如 c>=b）和成组约束（组间不混搭）描述的完整合法域上零限幅、结果等于精确值，能借关系证明安全即签发，并标注独立宽域会否误判不可签。无固定程序满足时退出码 2，交付可经 `verify_artifact` 实跑复核的失败原件，列明越最终寄存器的精确值和每个首组的合法饱和见证。运行时 `run_certified` 把程序、关系域和阈值绑在同一张证书上；读数不满足已签关系时退出码 3、单独留置复核，不与旧证书凑成复核单。上限五个输入、两个命名限幅点，仅使用原有读入、加、减原语，无分支、无常量合成。

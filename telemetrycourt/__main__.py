@@ -10,12 +10,36 @@ from .store import connect,run,replay,allrows
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram','probe-review'])
+    parser.add_argument('command',choices=['cover','agent','blind','demo','report','replay','spool','notifications','archive','egress','histogram','probe-review','probe-formula'])
     parser.add_argument('--db',default='demo.sqlite')
     parser.add_argument('--fixture')
+    parser.add_argument('--certificate')
+    parser.add_argument('--reading')
     args=parser.parse_args()
     if args.command=='replay':
         result=replay(args.db)
+    elif args.command=='probe-formula':
+        if not args.fixture:
+            parser.error('--fixture required')
+        contract=json.loads(Path(args.fixture).read_text(encoding='utf-8'))
+        if args.certificate:
+            certificate=json.loads(Path(args.certificate).read_text(encoding='utf-8'))
+            if args.reading:
+                reading=json.loads(Path(args.reading).read_text(encoding='utf-8'))['reading']
+            else:
+                reading=contract.pop('reading', None)
+                if reading is None:
+                    parser.error('--reading required or embed a "reading" in the fixture')
+            result=probe_review.run_certified(certificate,reading)
+            if result['status']=='held_for_review':
+                exit_code=3
+            else:
+                exit_code=0
+        else:
+            result=probe_review.issue(contract)
+            exit_code=0 if result['status']=='signed' else 2
+        print(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True))
+        raise SystemExit(exit_code)
     else:
         db=connect(args.db)
         if args.command=='probe-review':

@@ -1,0 +1,8 @@
+{
+  "id": "raw-exact-without-c-ge-b",
+  "kind": "raw_exact",
+  "expression": "a+b-c",
+  "limit": 6,
+  "inputs": {"a": [5, 7], "b": [3, 5], "c": [3, 5]},
+  "relations": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "raw-exact-three-sum-grouped",
+  "kind": "raw_exact",
+  "expression": "a+b+c",
+  "limit": 6,
+  "groups": [
+    {"inputs": {"a": [-7, -5], "b": [6, 6], "c": [6, 6]}, "relations": []},
+    {"inputs": {"a": [6, 6], "b": [-7, -5], "c": [6, 6]}, "relations": []},
+    {"inputs": {"a": [6, 6], "b": [6, 6], "c": [-7, -5]}, "relations": []}
+  ]
+}
