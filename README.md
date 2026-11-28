@@ -26,3 +26,5 @@ python -m unittest discover -s tests -v
 
 `python -B -m telemetrycourt burst --db :memory: --fixture fixtures/burst_normal.json`
 运行本地突发诊断抓取。连续高位越过阈值后，抓取账用一个额度买下触发时的合成详细样本。
+
+`python -B -m telemetrycourt device --db state.sqlite --fixture fixtures/device_normal.json` 持久化一台合成诊断设备：receive 用当前选录规则驱动 burst，抓到的详情经 capture 写盘后按句柄打开，重连后仍可读。段中换版用 `revise`：默认延期到活动段自然结束后接手；提供覆盖整段的原始采样目录可精确重构活状态并立即切换；若被截断计数掩盖的合法历史会为同一后续输入选出不同详情，则拒绝切换并返回两条可重放见证。
